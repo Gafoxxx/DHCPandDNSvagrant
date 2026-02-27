@@ -1,0 +1,60 @@
+- name: Install BIND
+  ansible.builtin.package:
+    name: "{{ bind_package_name }}"
+    state: present
+
+- name: Deploy named.conf
+  ansible.builtin.template:
+    src: named.conf.j2
+    dest: "{{ bind_config_path }}"
+    owner: root
+    group: named
+    mode: '0640'
+  notify: restart named
+
+- name: Deploy forward zone
+  ansible.builtin.template:
+    src: zone.forward.j2
+    dest: "{{ bind_zone_dir }}/{{ dns_domain }}.zone"
+    owner: root
+    group: named
+    mode: '0640'
+  notify: restart named
+
+- name: Deploy reverse zone
+  ansible.builtin.template:
+    src: zone.reverse.j2
+    dest: "{{ bind_zone_dir }}/40.168.192.in-addr.arpa.zone"
+    owner: root
+    group: named
+    mode: '0640'
+  notify: restart named
+
+- name: Validate named.conf
+  ansible.builtin.command: named-checkconf
+  changed_when: false
+
+- name: Validate forward zone
+  ansible.builtin.command: >
+    named-checkzone {{ dns_domain }}
+    {{ bind_zone_dir }}/{{ dns_domain }}.zone
+  changed_when: false
+
+- name: Validate reverse zone
+  ansible.builtin.command: >
+    named-checkzone 40.168.192.in-addr.arpa
+    {{ bind_zone_dir }}/40.168.192.in-addr.arpa.zone
+  changed_when: false
+
+- name: Enable and start named
+  ansible.builtin.service:
+    name: "{{ bind_service_name }}"
+    state: started
+    enabled: true
+
+- name: Open DNS service in firewalld
+  ansible.builtin.firewalld:
+    service: dns
+    permanent: true
+    state: enabled
+    immediate: true

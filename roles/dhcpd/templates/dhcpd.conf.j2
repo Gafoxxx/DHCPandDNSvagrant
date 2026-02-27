@@ -1,0 +1,13 @@
+authoritative;
+
+option domain-name "{{ dhcp_domain_name }}";
+option domain-name-servers {{ dhcp_dns_servers | join(', ') }};
+
+default-lease-time {{ dhcp_default_lease_time }};
+max-lease-time {{ dhcp_max_lease_time }};
+
+subnet 192.168.40.0 netmask 255.255.255.0 {
+    range 192.168.40.100 192.168.40.110;
+    option routers 192.168.40.1;
+    option broadcast-address 192.168.40.255;
+}

@@ -1,0 +1,11 @@
+$TTL 86400
+@   IN  SOA ns1.{{ dns_domain }}. admin.{{ dns_domain }}. (
+        {{ dns_zone_serial }}
+        3600
+        1800
+        604800
+        86400 )
+
+@   IN  NS  ns1.{{ dns_domain }}.
+
+ns1 IN A {{ dns_server_ip }}

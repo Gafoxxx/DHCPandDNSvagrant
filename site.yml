@@ -1,0 +1,6 @@
+- name: Deploy DNS + DHCP
+  hosts: dns_dhcp_servers
+  become: true
+  roles:
+    - dns_bind
+    - dhcpd

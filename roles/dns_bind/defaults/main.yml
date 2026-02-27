@@ -1,0 +1,4 @@
+bind_package_name: bind
+bind_service_name: named
+bind_config_path: /etc/named.conf
+bind_zone_dir: /var/named

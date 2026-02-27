@@ -1,0 +1,37 @@
+# ================= DNS =================
+dns_domain: "jgarzont.local"
+dns_server_ip: "192.168.40.254"
+dns_listen_on: "any"
+dns_allow_query: "any"
+dns_recursion: true
+
+dns_forwarders:
+  - "8.8.8.8"
+  - "8.8.4.4"
+
+dns_zone_serial: "{{ lookup('pipe', 'date +%Y%m%d01') }}"
+
+dns_hosts:
+  - name: "ns1"
+    ip: "192.168.40.254"
+
+# ================= DHCP =================
+dhcp_interface: "enp0s10"
+dhcp_authoritative: true
+dhcp_domain_name: "jgarzont.local"
+
+dhcp_dns_servers:
+  - "192.168.40.254"
+
+dhcp_default_lease_time: 600
+dhcp_max_lease_time: 7200
+
+dhcp_subnets:
+  - network: "192.168.40.0"
+    netmask: "255.255.255.0"
+    range_start: "192.168.40.100"
+    range_end: "192.168.40.110"
+    gateway: "192.168.40.1"
+    broadcast: "192.168.40.255"
+
+dhcp_reservations: []
